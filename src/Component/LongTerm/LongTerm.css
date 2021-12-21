@@ -1,0 +1,32 @@
+.submit-btn{
+    background-color: rgb(19, 179, 179) !important;
+    outline: none !important;
+    border: none !important;
+}
+
+.add-button{
+    display: inline !important;
+}
+
+.add-circle-btn{
+    cursor: pointer;
+}
+
+.close-view{
+    background-color: rgb(19, 179, 179) !important;
+    outline: none !important;
+    border: none !important;
+}
+
+.modal-title{
+    color: rgb(19, 179, 179) !important;
+}
+
+.delete-confirmation{
+    float: right;
+}
+.delete-confirmation Button{
+    margin-left: 1rem;
+    background-color: brown !important;
+    color: white;
+}

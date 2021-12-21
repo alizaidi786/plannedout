@@ -24,6 +24,8 @@ export default function Homepage() {
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
+        receiver: data.receiverId,
+        username: data.username,
         text: data.text,
         createdAt: Date.now(),
       });
@@ -36,6 +38,7 @@ export default function Homepage() {
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
+    console.log(User[0]?._id);
     socket?.current.emit("addUser", User[0]?._id);
     socket?.current.on("getUsers", (user) => {
       console.log(user);
@@ -86,24 +89,23 @@ export default function Homepage() {
         text: user.userName + ':' + '\r\n' + newMessage ,
         conversationId: currentChat?._id,
       };
-      // const receiverId = currentChat.members.find(
-      //   (member) => member !== User[0]?._id
-      // );
-      let receiverId = [];
+      const receiverId = currentChat.members.find(
+        (member) => member !== User[0]?._id
+      );
       let room = [];
       currentChat.members.map((member) => {
         if (member !== User[0]?._id) {
           // console.log("member=" + member);
-          receiverId.push(member);
+          // receiverId.push(member);
         }
       });
       console.log("Memeber" + receiverId);
 
-      // socket.current.emit("sendGroupMessage", {
-      //   senderId: User[0]?._id,
-      //   room,
-      //   text: newMessage,
-      // });
+      socket.current.emit("sendGroupMessage", {
+        senderId: User[0]?._id,
+        room,
+        text: user.userName + ':' + '\r\n' + newMessage,
+      });
     } else {
       message = {
         sender: User[0]?._id,

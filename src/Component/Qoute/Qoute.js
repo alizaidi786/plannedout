@@ -1,8 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
+import Popup from 'reactjs-popup';
+import ShortTerm from '../ShortTerm/ShortTerm'
+import LongTerm from '../LongTerm/LongTerm'
+import 'reactjs-popup/dist/index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Qoute.css'
+import { BsEyeFill } from "react-icons/bs"
+import  ShortTermModal from "../ShortTerm/ShortTermModal"
+import { MdModeEdit } from "react-icons/md"
+import { MdDelete } from "react-icons/md"
 import { Navbar,Container,Nav,NavDropdown,Row,Col } from 'react-bootstrap'
 import axios from "axios";
+import Axios from "../../Axios";
+import ShortTermCrudHandle from "../ShortTerm/ShortTermCrudHandle";
+import LongTermCrudHandle from "../LongTerm/LongTermCrudHandle";
 import {
   Card,
   CardContent,
@@ -53,11 +64,36 @@ export default function Qoute(){
   const [errorMessage, setErrorMessage] = useState("");
   const [loadingQuote, setLoadingQuote] = useState(false);
   const [quoteCopied, setQuoteCopied] = useState(false);
+  const [shortTerms, setShortTerms] = useState([]);
+  const [longTerms, setLongTerms] = useState([]);
 
   useEffect(() => {
     fetchRandomQuote();
   }, []);
 
+  useEffect(() => {
+    Axios.get(`http://localhost:4000/shortTerm`).then(
+      (data) => {
+        if (data.data.body.status == "SUCCESS") {
+          setShortTerms(data.data.body.data);
+        } else if (data.data.body.status == "ERROR") {
+          alert("Server Down");
+        }
+      }
+    );
+  }, [shortTerms] )
+
+  useEffect(() => {
+    Axios.get(`http://localhost:4000/longTerm`).then(
+      (data) => {
+        if (data.data.body.status == "SUCCESS") {
+          setLongTerms(data.data.body.data);
+        } else if (data.data.body.status == "ERROR") {
+          alert("Server Down");
+        }
+      }
+    );
+  }, [longTerms] )
   async function fetchRandomQuote() {
     try {
       setLoadingQuote(true);
@@ -77,6 +113,7 @@ export default function Qoute(){
     setQuoteCopied(true);
   }
 
+
     return(
        <div>
          
@@ -86,15 +123,19 @@ export default function Qoute(){
   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
   <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
     <Nav>
-      <Nav.Link href="/qoute">Homepage</Nav.Link>
-      <Nav.Link href="#features">Activity</Nav.Link>
+      <Nav.Link href="/qoute" className='active'>Homepage</Nav.Link>
+      <Nav.Link href="#features">Activities</Nav.Link>
       <Nav.Link href="#pricing">Plan</Nav.Link>
-      <NavDropdown title="Discuss" id="collasible-nav-dropdown">
+      <Nav.Link href="#pricing">Chat</Nav.Link>
+      <NavDropdown title="My Account" id="collasible-nav-dropdown">
         <NavDropdown.Item href="#action/3.1">Friends</NavDropdown.Item>
         <NavDropdown.Item href="#action/3.2">Groups</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.3">Chat</NavDropdown.Item>
+        <NavDropdown.Item href="#action/3.3"><Popup trigger={<button> Click to open popup </button>} 
+     position="right center">
+      <div>GeeksforGeeks</div>
+      <button>Click here</button>
+    </Popup></NavDropdown.Item>
       </NavDropdown>
-      <Nav.Link href="#pricing">Contact Us</Nav.Link>
     </Nav>
   </Navbar.Collapse>
   </Container>
@@ -151,26 +192,77 @@ export default function Qoute(){
   </Row>
   <Row>
     <Col className="text-center text-md-right" >
-    <div className="goals">
+    <div className="goals term-card">
     <h2>Goals</h2>
     </div>
     </Col>
   </Row>
   <Row >
     <Col className="text-center text-md-right">
-    <Card variant="outlined">
-      <div className="sterm">
-      <h3>Short Term</h3>
-      </div> 
-      <div className="">
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident hic repellendus impedit expedita mollitia voluptas in rem totam molestiae ducimus, facilis tempore magni iure deleniti eos error corrupti sapiente! Exercitationem quod harum optio ipsum saepe similique, quam eius aperiam expedita, incidunt in fugit sit reprehenderit ut nisi porro, repellendus quia odio facere nemo molestias quas excepturi esse beatae. Ullam eius impedit obcaecati modi vel voluptatem delectus fuga, qui sequi sed consequatur necessitatibus. Temporibus quaerat totam similique earum expedita et atque corrupti magni excepturi rem neque suscipit, doloremque aperiam harum exercitationem provident beatae quisquam quas veritatis nulla quos consequatur ut tenetur!</p>
-      </div>
+    <Card variant="outlined" className='term-card'> 
+    <div className="term-headline">
+     <h4>Long Term</h4>
+     </div> 
+     <div className="term-content">
+     {longTerms.map((longTerms) => (
+        <div >
+           <Card variant="outlined" className="card-style-content" >
+            <CardContent>
+            <Col> <h5>{longTerms.title}</h5></Col>
+            <Row>
+             <Col><p>Start Date: {longTerms.startDate}</p></Col>
+             <Col><p>Finish Date: {longTerms.finishDate}</p></Col>
+            </Row>
+            
+             < LongTermCrudHandle
+               _id = {longTerms._id}
+               title={longTerms.title}
+               description={longTerms.description}
+               startDate={longTerms.startDate}
+               finishDate={longTerms.finishDate}
+               shortTerm={longTerms.shortTerm} />
+          
+            </CardContent>
+          </Card>  
+        </div>
+            
+       )) }
+     </div>
+     <LongTerm />
     </Card>
+   
     </Col>
     <Col className="text-center text-md-right">
-    <Card variant="outlined"> 
-     <h3>Long Term</h3>
-     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi ad praesentium officia, error ea consequuntur? Itaque, ipsum unde nam eveniet deleniti earum, quos non sequi architecto, accusantium sunt. Sint eius quod sed eum unde quibusdam? Necessitatibus odio libero omnis illo placeat doloribus id beatae provident est quod. Excepturi hic sed sunt nisi aut odio dignissimos, dicta, facilis possimus obcaecati iste? Iusto voluptatem, doloremque vitae voluptas nemo deserunt voluptatum perspiciatis labore necessitatibus numquam expedita non magnam modi cupiditate adipisci eligendi pariatur, beatae deleniti nulla eum quibusdam explicabo magni. Eveniet soluta tenetur doloremque labore quos laborum? Quam illo odio sunt tenetur fugit!</p>
+    <Card variant="outlined" className='term-card'>
+      <div className="term-headline">
+      <h4>Short Term</h4>
+      </div> 
+      <div className="term-content">
+
+      {shortTerms.map((shortTerms) => (
+        <div >
+           <Card variant="outlined" className="card-style-content" >
+            <CardContent>
+            <Col> <h5>{shortTerms.title}</h5></Col>
+            <Row>
+             <Col><p>Start Date: {shortTerms.startDate}</p></Col>
+             <Col><p>Finish Date: {shortTerms.finishDate}</p></Col>
+            </Row>
+            
+             < ShortTermCrudHandle
+               _id = {shortTerms._id}
+               title={shortTerms.title}
+               description={shortTerms.description}
+               startDate={shortTerms.startDate}
+               finishDate={shortTerms.finishDate}
+               longTerm={shortTerms.longTerm}  />
+            </CardContent>
+          </Card>  
+        </div>
+            
+       )) }
+      </div>
+      <ShortTerm />
     </Card>
     </Col>
   </Row>

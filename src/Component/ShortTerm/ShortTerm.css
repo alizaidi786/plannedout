@@ -1,0 +1,36 @@
+.submit-btn{
+    background-color: rgb(19, 179, 179) !important;
+    outline: none !important;
+    border: none !important;
+}
+
+.add-button{
+    display: inline !important;
+}
+
+.add-circle-btn{
+    cursor: pointer;
+}
+
+.close-view{
+    background-color: rgb(19, 179, 179) !important;
+    outline: none !important;
+    border: none !important;
+}
+
+.modal-title{
+    color: rgb(19, 179, 179) !important;
+}
+
+.hide-shadow{
+    outline: none !important;
+}
+
+.show-another-term h6{
+   color: rgb(0, 180, 120);
+   font-weight: bold;
+}
+.show-another-term p:hover{
+    cursor: pointer;
+    color: rgb(0, 180, 120);
+}
