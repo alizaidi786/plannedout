@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './ShortTerm.css'
+import '../ShortTerm/ShortTerm.css'
 import { Modal,Button,Col,Row,Form } from 'react-bootstrap'
 import Axios from "../../Axios";
 
-export default function ShortTermEditModal(props) { 
+export default function AddShortTermToLong(props) { 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [startDate, setStartDate] = useState("");
@@ -13,78 +13,24 @@ export default function ShortTermEditModal(props) {
     const [longTerm, setLongTerm] = useState([]); 
     const [longTermId, setLongTermId] = useState("");
 
-    useEffect(() => {
-      getLongTerm()
-    }, [] )
 
-    const getLongTerm = () => {
-      Axios.get(`http://localhost:4000/longTerm?id=${props.longTerm}`).then(
-        (data) => {
-          if (data.data.body.status === "SUCCESS") {
-            setLongTerm(data.data.body.data);
-          } else if (data.data.body.status === "ERROR") {
-          }
-        }
-      );
-    }
-
-
-    useEffect(() => {
-      getAllLongTerms()
-    }, [])
-
-    const getAllLongTerms = () => {
-      Axios.get(`http://localhost:4000/longTerm`).then(
-        (data) => {
-          if (data.data.body.status === "SUCCESS") {
-            setLongTerms(data.data.body.data);
-          } else if (data.data.body.status === "ERROR") {
-
-          }
-        }
-      )
-    }
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(title);
-        if(title.length === 0){
-          var titleEdited = props.title
-        }else{
-          titleEdited = title
-        }
-        if(description.length === 0){
-          var descriptionEdited = props.description
-        }else{
-          descriptionEdited = description
-        }
-        if(startDate.length === 0){
-          var startDateEdited = props.startDate
-        }else{
-          startDateEdited = startDate
-        }
-        if(finishDate.length === 0){
-          var finishDateEdited = props.finishDate
-        }else{
-          finishDateEdited = finishDate
-        }
-        
-        console.log("Enter");
-        Axios.post("http://localhost:4000/shortTerm", {
-          id: props._id,
-          title: titleEdited,
-          description: descriptionEdited,
-          startDate: startDateEdited,
-          finishDate: finishDateEdited,
-          longTerm: longTermId
-        }).then((data) => {
-          if (data.status === 200) {
-            console.log(data.data.body.data);
-            alert("Updated Succesfully");
-          } else if (data.status === 400) {
-            alert("Server Down Try again after sometime");
-          }
-        });
+        Axios.put("http://localhost:4000/shortTerm", {
+      title: title,
+      description: description,
+      startDate: startDate,
+      finishDate: finishDate,
+      longTerm: props.longTermId
+    }).then((data) => {
+      if (data.status == 200) {
+        alert("Added Succesfully");
+        this.props.onPopupClose(false); 
+      } else if (data.status == 400) {
+        alert("Server Down Try again after sometime");
+      }
+    });
         document.getElementById('close-view').click()
         
       };
@@ -98,7 +44,7 @@ export default function ShortTermEditModal(props) {
       >
         <Modal.Header >
           <Modal.Title className="modal-title" id="contained-modal-title-vcenter">
-           Edit Short Term Goal
+           Add Short Term Goal
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -115,14 +61,8 @@ export default function ShortTermEditModal(props) {
  </Form.Group>    
 
  <Form.Group className="mb-3" controlId="exampleForm.ControlSelect1">
-    <Form.Control as="select" value={longTerm.title} onChange={(e) => setLongTermId(e.target.value)} >
-      <option>Select Long Term (Optional)</option>
-      {longTerms.map((longterms) =>(
-        <option value={longterms._id}>{longterms.title}</option>
-      ) )
-      }
-      
-    </Form.Control>
+    <Form.Label>Long Term Goal</Form.Label>
+    <Form.Control disabled value={props.longTermTitle}/>
   </Form.Group>
 
  <Row className="mb-3">

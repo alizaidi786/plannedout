@@ -1,8 +1,7 @@
 import React from "react";
 import "./Message.css";
 import TimeAgo from "timeago-react";
-import Axios from "../../Axios";
-import { useStoreActions, useStoreState } from "easy-peasy";
+
 
 
 export default function message({ message, own }) {

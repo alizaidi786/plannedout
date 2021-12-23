@@ -3,7 +3,7 @@ import ChatOnline from "../ChatOnline/ChatOnline";
 import Conversation from "../Conversation/Conversation";
 import Message from "../Message/Message";
 import "./Homepage.css";
-import { useStoreActions, useStoreState } from "easy-peasy";
+import { useStoreState } from "easy-peasy";
 import Axios from "../../Axios";
 import { io } from "socket.io-client";
 export default function Homepage() {
@@ -12,7 +12,6 @@ export default function Homepage() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const scrollRef = useRef();
   const socket = useRef();
   const UserModel = () => useStoreState((state) => state.GlobelStore.user);
@@ -49,11 +48,11 @@ export default function Homepage() {
     Axios.get(`http://localhost:4000/conversation?id=${User[0]?._id}`).then(
       (data) => {
         // console.log(data);
-        if (data.data.body.status == "SUCCESS") {
+        if (data.data.body.status === "SUCCESS") {
           console.log("Our Data", data.data.body.data);
           setConversations(data.data.body.data);
           // history.push("/homepage");
-        } else if (data.data.body.status == "ERROR") {
+        } else if (data.data.body.status === "ERROR") {
           alert("Server Down");
         }
       }
@@ -70,10 +69,10 @@ export default function Homepage() {
     Axios.get(`http://localhost:4000/messages?id=${currentChat?._id}`).then(
       (data) => {
         // console.log(data);
-        if (data.data.body.status == "SUCCESS") {
+        if (data.data.body.status === "SUCCESS") {
           console.log("Message Data", data.data.body.data);
           setMessages(data.data.body.data);
-        } else if (data.data.body.status == "ERROR") {
+        } else if (data.data.body.status === "ERROR") {
           // alert("Server Down");
         }
       }
@@ -128,10 +127,10 @@ export default function Homepage() {
       message
     ).then((data) => {
       // console.log(data);
-      if (data.data.body.status == "SUCCESS") {
+      if (data.data.body.status === "SUCCESS") {
         setMessages([...messages, data.data.body.data]);
         setNewMessage("");
-      } else if (data.data.body.status == "ERROR") {
+      } else if (data.data.body.status === "ERROR") {
         // alert("Server Down");
       }
     });

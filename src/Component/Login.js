@@ -8,8 +8,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
-  const UserModel = () => useStoreState((state) => state.GlobelStore.user);
-  const User = UserModel();
 
   const SetUser = useStoreActions((actions) => actions.GlobelStore.setUser);
 
@@ -20,12 +18,12 @@ export default function Login() {
       `http://localhost:4000/user?email=${email}&password=${password}`
     ).then((data) => {
       console.log(data);
-      if (data.data.body.status == "SUCCESS") {
+      if (data.data.body.status === "SUCCESS") {
         console.log(data.data.body);
         SetUser(data.data.body.data);
         alert("Login Succesfully");
         history.push("/homepage");
-      } else if (data.data.body.status == "ERROR") {
+      } else if (data.data.body.status === "ERROR") {
         alert("User Not Found");
       }
     });

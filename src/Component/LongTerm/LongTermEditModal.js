@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LongTerm.css'
 import { Modal,Button,Col,Row,Form } from 'react-bootstrap'
@@ -20,41 +20,45 @@ export default function LongTermEditModal(props) {
       setShortTerm(shortTermIds);
   }
   useEffect(() => {
+    getAllShortTerms()
+  }, [])
+
+  const getAllShortTerms = () => [
     Axios.get(`http://localhost:4000/shortTerm`).then(
       (data) => {
-        if (data.data.body.status == "SUCCESS") {
+        if (data.data.body.status === "SUCCESS") {
           setShortTerms(data.data.body.data);
-        } else if (data.data.body.status == "ERROR") {
+        } else if (data.data.body.status === "ERROR") {
 
         }
       }
     )
-  }, [shortTerms])
+  ]
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(title);
-        if(title.length == 0){
+        if(title.length === 0){
           var titleEdited = props.title
         }else{
           titleEdited = title
         }
-        if(description.length == 0){
+        if(description.length === 0){
           var descriptionEdited = props.description
         }else{
           descriptionEdited = description
         }
-        if(startDate.length == 0){
+        if(startDate.length === 0){
           var startDateEdited = props.startDate
         }else{
           startDateEdited = startDate
         }
-        if(finishDate.length == 0){
+        if(finishDate.length === 0){
           var finishDateEdited = props.finishDate
         }else{
           finishDateEdited = finishDate
         }
-        if(shortTerm.length == 0){
+        if(shortTerm.length === 0){
           var shortTermEdited = props.shortTerm
         }else{
           shortTermEdited = shortTerm
@@ -68,10 +72,10 @@ export default function LongTermEditModal(props) {
           finishDate: finishDateEdited,
           shortTerm: shortTermEdited
         }).then((data) => {
-          if (data.status == 200) {
+          if (data.status === 200) {
             console.log(data.data.body.data);
             alert("Updated Succesfully");
-          } else if (data.status == 400) {
+          } else if (data.status === 400) {
             alert("Server Down Try again after sometime");
           }
         });

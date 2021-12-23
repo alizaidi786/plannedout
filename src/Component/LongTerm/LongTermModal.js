@@ -24,9 +24,9 @@ class LongTermModal extends Component {
 
         Axios.get(`http://localhost:4000/shortTerm`).then(
       (data) => {
-        if (data.data.body.status == "SUCCESS") {
+        if (data.data.body.status === "SUCCESS") {
           this.shortTerms = data.data.body.data
-        } else if (data.data.body.status == "ERROR") {
+        } else if (data.data.body.status === "ERROR") {
           alert("Server Down");
         }
       }
@@ -40,7 +40,6 @@ class LongTermModal extends Component {
       var options = event.target.options;
       for (var i = 0, l = options.length; i < l; i++) {
         if (options[i].selected) {
-         console.log(options[i].value);
          values.push(options[i].value);
         }
       }
@@ -64,10 +63,10 @@ class LongTermModal extends Component {
       finishDate: this.finishDate.current.value.substring(0,14),
       shortTerm: this.state.shorts
     }).then((data) => {
-      if (data.status == 200) {
+      if (data.status === 200) {
         alert("Added Succesfully");
         this.props.onPopupClose(false); 
-      } else if (data.status == 400) {
+      } else if (data.status === 400) {
         alert("Server Down Try again after sometime");
       }
     });

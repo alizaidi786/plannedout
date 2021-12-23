@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ShortTerm.css'
 import Axios from "../../Axios";
@@ -12,23 +12,13 @@ export default function ShortTermViewModal(props) {
   useEffect(() => {
     Axios.get(`http://localhost:4000/longTerm?id=${props.longTerm}`).then(
       (data) => {
-        if (data.data.body.status == "SUCCESS") {
+        if (data.data.body.status === "SUCCESS") {
           setLongTerm(data.data.body.data);
-        } else if (data.data.body.status == "ERROR") {
+        } else if (data.data.body.status === "ERROR") {
         }
       }
     );
   }, [longTerm] )
-
-  // useEffect( () => {
-  //   if(longTerm.title){    
-  //   }else{
-  //      var long = document.getElementById("longtermTitle")
-  //      long.style.display = "none"
-  //   }
-  // }
-  // )
-    
 
     return (
       <Modal

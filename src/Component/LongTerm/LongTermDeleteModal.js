@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LongTerm.css'
-import { Modal,Button,Col,Row } from 'react-bootstrap'
+import { Modal,Button} from 'react-bootstrap'
 import Axios from '../../Axios'
 
 export default function LongTermDeleteModal(props) { 
     const deleteTerm = () =>{
         Axios.delete(`http://localhost:4000/longTerm?id=${props._id}`).then((data) => {
-          if (data.status == 200) {
+          if (data.status === 200) {
             console.log(data.data.body.data);
             alert("Deleted Succesfully");
-          } else if (data.status == 400) {
+          } else if (data.status === 400) {
             alert("Server Down Try again after sometime");
           }
         });
